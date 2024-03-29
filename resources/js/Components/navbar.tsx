@@ -1,60 +1,46 @@
 import { Link } from "@inertiajs/react";
 import { CircleUser, Menu, Package2, Search } from "lucide-react";
-import React from "react";
 import { Sheet, SheetContent, SheetTrigger } from "./ui/sheet";
 import { Button } from "./ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuLabel,
   DropdownMenuSeparator,
+  DropdownMenuShortcut,
   DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { Input } from "./ui/input";
 import { ModeToggle } from "./mode-toggle";
+import NavLink from "./NavLink";
+import { User } from "@/types";
+import ResponsiveNavLink from "./ResponsiveNavLink";
 
-const Navbar = () => {
+const Navbar = ({ user }: { user: User }) => {
   return (
     <header className="sticky top-0 flex h-16 items-center gap-4 border-b bg-background px-4 md:px-6">
       <nav className="hidden flex-col gap-6 text-lg font-medium md:flex md:flex-row md:items-center md:gap-5 md:text-sm lg:gap-6">
         <Link
-          href="#"
+          href={route("dashboard")}
           className="flex items-center gap-2 text-lg font-semibold md:text-base"
         >
           <Package2 className="h-6 w-6" />
-          <span className="sr-only">Acme Inc</span>
+          <span className="sr-only">Task Master</span>
         </Link>
-        <Link
-          href="#"
-          className="text-foreground transition-colors hover:text-foreground"
+        <NavLink
+          href={route("dashboard")}
+          active={route().current("dashboard")}
         >
           Dashboard
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
+        </NavLink>
+        <NavLink
+          href={route("project.index")}
+          active={route().current("project.*")}
         >
-          Orders
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Products
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Customers
-        </Link>
-        <Link
-          href="#"
-          className="text-muted-foreground transition-colors hover:text-foreground"
-        >
-          Analytics
-        </Link>
+          Projects
+        </NavLink>
       </nav>
       <Sheet>
         <SheetTrigger asChild>
@@ -66,39 +52,24 @@ const Navbar = () => {
         <SheetContent side="left">
           <nav className="grid gap-6 text-lg font-medium">
             <Link
-              href="#"
+              href={route("dashboard")}
               className="flex items-center gap-2 text-lg font-semibold"
             >
               <Package2 className="h-6 w-6" />
-              <span className="sr-only">Acme Inc</span>
+              <span className="sr-only">Task Master</span>
             </Link>
-            <Link href="#" className="hover:text-foreground">
+            <ResponsiveNavLink
+              href={route("dashboard")}
+              active={route().current("dashboard")}
+            >
               Dashboard
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
+            </ResponsiveNavLink>
+            <ResponsiveNavLink
+              href={route("project.index")}
+              active={route().current("project.*")}
             >
-              Orders
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Products
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Customers
-            </Link>
-            <Link
-              href="#"
-              className="text-muted-foreground hover:text-foreground"
-            >
-              Analytics
-            </Link>
+              Projects
+            </ResponsiveNavLink>
           </nav>
         </SheetContent>
       </Sheet>
@@ -108,7 +79,7 @@ const Navbar = () => {
             <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
             <Input
               type="search"
-              placeholder="Search products..."
+              placeholder="Search projects..."
               className="pl-8 sm:w-[300px] md:w-[200px] lg:w-[300px]"
             />
           </div>
@@ -121,13 +92,41 @@ const Navbar = () => {
               <span className="sr-only">Toggle user menu</span>
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+          <DropdownMenuContent className="w-56" align="end" forceMount>
+            <DropdownMenuLabel className="font-normal">
+              <div className="flex flex-col space-y-1">
+                <p className="text-sm font-medium leading-none">{user.name}</p>
+                <p className="text-xs leading-none text-muted-foreground">
+                  {user.email}
+                </p>
+              </div>
+            </DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Settings</DropdownMenuItem>
-            <DropdownMenuItem>Support</DropdownMenuItem>
+            <DropdownMenuGroup>
+              <Link href={route("profile.edit")}>
+                <DropdownMenuItem className="cursor-pointer">
+                  Profile
+                  <DropdownMenuShortcut>⇧⌘P</DropdownMenuShortcut>
+                </DropdownMenuItem>
+              </Link>
+              <DropdownMenuItem className="cursor-pointer">
+                Settings
+                <DropdownMenuShortcut>⌘S</DropdownMenuShortcut>
+              </DropdownMenuItem>
+              <DropdownMenuItem>New Team</DropdownMenuItem>
+            </DropdownMenuGroup>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Logout</DropdownMenuItem>
+            <Link
+              href={route("logout")}
+              method="post"
+              as="button"
+              className="w-full"
+            >
+              <DropdownMenuItem className="cursor-pointer">
+                Log out
+                <DropdownMenuShortcut>⇧⌘Q</DropdownMenuShortcut>
+              </DropdownMenuItem>
+            </Link>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
