@@ -8,13 +8,13 @@ const Pagination = ({ links }: any) => {
           preserveScroll
           key={link.label}
           href={link.url || ""}
-          className={
-            "inline-block py-2 px-3 rounded-lg text-gray-200 text-xs " +
-            (link.active ? "bg-gray-950 " : "") +
-            (!link.url
-              ? "!text-gray-500 cursor-not-allowed "
-              : "hover:bg-gray-950")
-          }
+          className={`inline-block py-2 px-3 rounded-lg text-sm mx-1 ${
+            link.active ? "dark:bg-slate-700 bg-slate-400 font-medium" : ""
+          } ${
+            !link.url
+              ? "!text-gray-500 cursor-not-allowed"
+              : "hover:bg-slate-400 dark:hover:bg-slate-700"
+          }`}
           dangerouslySetInnerHTML={{ __html: link.label }}
         ></Link>
       ))}
